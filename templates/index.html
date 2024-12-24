@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doughmain - Master Your Money</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <h1>Doughmain</h1>
+        <p>Master Your Money</p>
+    </header>
+    <main>
+        <div class="image-container">
+            <img src="{{ url_for('static', filename='doughmainpic.jpg') }}" alt="Doughmain Bakery Scene">
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 Doughmain. All Rights Reserved.</p>
+    </footer>
+
+    <button class="next-button" onclick="goToDetails()">Next</button>
+    <script>
+        function goToDetails() {
+            window.location.href = "/details";
+        }
+    </script>
+    
+</body>
+</html>
+

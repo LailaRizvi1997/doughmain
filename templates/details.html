@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doughmain - Financial Details</title>
+    <link rel="stylesheet" href="/static/style.css"> <!-- Ensure this points to your CSS -->
+</head>
+<body>
+    <header>
+        <h1>Doughmain</h1>
+        <p>Tell us about your finances</p>
+    </header>
+    <main>
+        <form id="financeForm">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Your Input</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Age</td>
+                        <td>
+                            <select name="age" id="age">
+                                <option value="18-25">18-25</option>
+                                <option value="26-35">26-35</option>
+                                <option value="36-45">36-45</option>
+                                <option value="46-55">46-55</option>
+                                <option value="56+">56+</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Income</td>
+                        <td>
+                            <select name="income" id="income">
+                                <option value="<20k">Less than £20k</option>
+                                <option value="20k-40k">£20k-40k</option>
+                                <option value="40k-60k">£40k-60k</option>
+                                <option value="60k-100k">£60k-100k</option>
+                                <option value="100k-200k">£100k-200k</option>
+                                <option value="200k-300k">£200k-300k</option>
+                                <option value="300k+">£300k+</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Savings</td>
+                        <td>
+                            <select name="savings" id="savings">
+                                <option value="<1k">Less than £1k</option>
+                                <option value="1k-10k">£1k-10k</option>
+                                <option value="10k-50k">£10k-50k</option>
+                                <option value="50k-100k">£50k-100k</option>
+                                <option value="100k-500k">£100k-500k</option>
+                                <option value="500k+">£500k+</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Investments</td>
+                        <td>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" name="investments" value="stocks"> Stocks</label><br>
+                                <label><input type="checkbox" name="investments" value="real_estate"> Real Estate</label><br>
+                                <label><input type="checkbox" name="investments" value="crypto"> Cryptocurrency</label><br>
+                                <label><input type="checkbox" name="investments" value="bonds"> Bonds</label><br>
+                                <label><input type="checkbox" name="investments" value="mutual_funds"> Mutual Funds</label><br>
+                                <label><input type="checkbox" name="investments" value="other"> Other</label><br>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Debt</td>
+                        <td>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" name="debt" value="credit_card"> Credit Card</label><br>
+                                <label><input type="checkbox" name="debt" value="student_loans"> Student Loans</label><br>
+                                <label><input type="checkbox" name="debt" value="mortgage"> Mortgage</label><br>
+                                <label><input type="checkbox" name="debt" value="car_loan"> Car Loan</label><br>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="button-container">
+                <button type="button" class="next-button" onclick="submitDetails()">Next: Talk to the AI</button>
+            </div>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; 2024 Doughmain. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        async function submitDetails() {
+            const formData = new FormData(document.getElementById("financeForm"));
+            const data = Object.fromEntries(formData.entries());
+            data.debt = Array.from(document.querySelectorAll('input[name="debt"]:checked')).map(cb => cb.value);
+            data.investments = Array.from(document.querySelectorAll('input[name="investments"]:checked')).map(cb => cb.value);
+
+            try {
+                const response = await fetch("/submit_details", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data),
+                });
+
+                if (response.ok) {
+                    window.location.href = "/chat";
+                } else {
+                    alert("Failed to submit details. Please try again.");
+                }
+            } catch (error) {
+                alert("An error occurred while submitting your details.");
+            }
+        }
+    </script>
+</body>
+</html>

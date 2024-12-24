@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doughmain - Chat</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <h1>Doughmain</h1>
+        <p>Chat with Doughbot</p>
+    </header>
+
+    <main>
+        <div id="chat-interface">
+            <div id="chat-box"></div>
+            <div id="input-container">
+                <input id="user-input" type="text" placeholder="Type your message here..." autocomplete="off">
+                <button id="send-button" onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Doughmain. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        async function sendMessage() {
+            const userInput = document.getElementById("user-input").value.trim();
+            if (!userInput) return;
+
+            const chatBox = document.getElementById("chat-box");
+
+            // Add user's message to the chat
+            const userMessage = document.createElement("div");
+            userMessage.classList.add("message", "user-message");
+            userMessage.innerText = userInput;
+            chatBox.appendChild(userMessage);
+
+            // Clear the input field
+            document.getElementById("user-input").value = "";
+
+            // Scroll to the bottom of the chat box
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Send user's message to the backend
+            try {
+                const response = await fetch("/ask_bot", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: userInput }),
+                });
+
+                const result = await response.json();
+
+                // Add bot's reply to the chat
+                const botMessage = document.createElement("div");
+                botMessage.classList.add("message", "bot-message");
+                botMessage.innerText = result.reply;
+                chatBox.appendChild(botMessage);
+
+                // Scroll to the bottom of the chat box
+                chatBox.scrollTop = chatBox.scrollHeight;
+            } catch (error) {
+                console.error("Error:", error);
+
+                // Show an error message in the chat
+                const errorMessage = document.createElement("div");
+                errorMessage.classList.add("message", "error-message");
+                errorMessage.innerText = "Error: Unable to connect to Doughbot.";
+                chatBox.appendChild(errorMessage);
+
+                // Scroll to the bottom of the chat box
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+        }
+    </script>
+</body>
+</html>
